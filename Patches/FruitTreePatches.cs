@@ -1,6 +1,7 @@
 ﻿using HarmonyLib;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Orchard.Framework;
 using StardewValley;
 using StardewValley.TerrainFeatures;
 using System;
@@ -11,7 +12,7 @@ using System.Reflection.Emit;
 using Object = StardewValley.Object;
 
 
-namespace Orchard
+namespace Orchard.Patches
 {
     internal class FruitTreePatches
     {
@@ -26,7 +27,7 @@ namespace Orchard
             [HarmonyPrefix]
             protected static void Prefix(FruitTree __instance, GameLocation environment)
             {
-                if (!FruitTree.IsGrowthBlocked(__instance.currentTileLocation,__instance.currentLocation) && __instance.isFertilized() && __instance.daysUntilMature.Value >= 0 && !Game1.IsWinter)
+                if (!FruitTree.IsGrowthBlocked(__instance.currentTileLocation, __instance.currentLocation) && __instance.isFertilized() && __instance.daysUntilMature.Value >= 0 && !Game1.IsWinter)
                 {
                     __instance.daysUntilMature.Value--;
                 }
@@ -85,22 +86,22 @@ namespace Orchard
             protected static void Postfix(FruitTree __instance, Vector2 tileLocation, int __state)
             {
                 Random rand = new Random();
-                
+
                 int index = SaplingIndex.getSaplingIndex(__instance.indexOfFruit.Value);
 
-                
+
                 if (__state > 0 && !__instance.hasDroppedSapling())
                 {
                     bool drop = false;
                     for (int i = __state; i > 0; i--)
                     {
-                        if ((rand.Next(1, 101) + Game1.player.GetSkillLevel(Farmer.foragingSkill)) > 100) drop = true;
+                        if (rand.Next(1, 101) + Game1.player.GetSkillLevel(Farmer.foragingSkill) > 100) drop = true;
                     }
 
                     if (drop == true)
                     {
                         __instance.addDroppedSapling();
-                        Debris sapling = new Debris(new StardewValley.Object(index, 1, false, -1, 0), tileLocation * 64f);
+                        Debris sapling = new Debris(new Object(index, 1, false, -1, 0), tileLocation * 64f);
                         __instance.currentLocation.debris.Add(sapling);
                     }
                 }

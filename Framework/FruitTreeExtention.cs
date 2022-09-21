@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework;
 using StardewValley;
 using StardewValley.TerrainFeatures;
 
-namespace Orchard
+namespace Orchard.Framework
 {
     /// <summary>
     /// Utility methodes to enable new functionality
@@ -15,17 +15,17 @@ namespace Orchard
     internal static class FruitTreeExtention
     {
 
-        
+
 
         public static bool fertilize(this FruitTree tree)
         {
             if (tree.modData.ContainsKey("fertilizer") && tree.modData["fertilizer"] == "true")
             {
-                StardewValley.Game1.showRedMessageUsingLoadString("Strings\\StringsFromCSFiles:TreeFertilizer2");
+                Game1.showRedMessageUsingLoadString("Strings\\StringsFromCSFiles:TreeFertilizer2");
                 tree.currentLocation.playSound("cancel");
                 return false;
             }
-            else if(tree.modData.ContainsKey("fertilizer"))
+            else if (tree.modData.ContainsKey("fertilizer"))
             {
                 tree.modData["fertilizer"] = "true";
                 tree.currentLocation.playSound("dirtyHit");
@@ -77,7 +77,8 @@ namespace Orchard
 
         public static bool hasDroppedSapling(this FruitTree tree)
         {
-            if (tree.modData.ContainsKey("sapling")){
+            if (tree.modData.ContainsKey("sapling"))
+            {
                 switch (tree.modData["sapling"])
                 {
                     case "true":
@@ -128,7 +129,7 @@ namespace Orchard
             queue.Enqueue(tree.currentTileLocation);
             visited.Add(tree.currentTileLocation);
 
-            for(int i = 0; i < 80; i++)
+            for (int i = 0; i < 80; i++)
             {
                 if (queue.Count <= 0)
                 {
@@ -154,6 +155,6 @@ namespace Orchard
             return false;
         }
 
-        
+
     }
 }

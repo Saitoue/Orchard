@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Orchard
+namespace Orchard.Framework
 {
     internal class SaplingIndex
     {
-       
+
         /// <summary>
         /// returns index of saplings based on index of the fruit on the tree;
         /// </summary>
@@ -22,7 +22,7 @@ namespace Orchard
                 ///apricot
                 case 634:
                     return 629;
-                
+
                 ///orange
                 case 635:
                     return 630;

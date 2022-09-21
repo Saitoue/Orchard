@@ -16,7 +16,7 @@ using Object = StardewValley.Object;
 
 
 
-namespace Orchard
+namespace Orchard.Patches
 {
     internal class ObjectPatches
     {
