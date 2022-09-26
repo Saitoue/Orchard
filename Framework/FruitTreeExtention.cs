@@ -155,6 +155,47 @@ namespace Orchard.Framework
             return false;
         }
 
+        public static int getSapling(this FruitTree tree)
+        {
+            switch (tree.indexOfFruit.Value)
+            {
+                ///apricot
+                case 634:
+                    return 629;
+
+                ///orange
+                case 635:
+                    return 630;
+
+                ///peach
+                case 636:
+                    return 631;
+
+                ///pomegranat
+                case 637:
+                    return 632;
+
+                ///cherry
+                case 638:
+                    return 628;
+
+                ///apple
+                case 613:
+                    return 633;
+
+                ///mango
+                case 834:
+                    return 835;
+
+                ///banana
+                case 91:
+                    return 69;
+
+                default:
+                    return tree.indexOfFruit.Value;
+
+            }
+        }
 
     }
 }
