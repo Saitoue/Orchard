@@ -30,6 +30,7 @@ namespace Orchard.Patches
                 if (!FruitTree.IsGrowthBlocked(__instance.currentTileLocation, __instance.currentLocation) && __instance.isFertilized() && __instance.daysUntilMature.Value >= 0 && !Game1.IsWinter)
                 {
                     __instance.daysUntilMature.Value--;
+                    
                 }
 
                 if (__instance.daysUntilMature.Value <= 0 && __instance.findCloseBeeHouse() && !Game1.IsWinter && !__instance.GreenHouseTree)
@@ -42,12 +43,12 @@ namespace Orchard.Patches
                     Random rand = new Random();
 
                     ///grows additional fruit if fertilized
-                    if (__instance.isFertilized())
+                    if ((ModEntry.Config.extraFruitFertilizer || (ModEntry.Config.outOfSeasonTrees && !__instance.IsInSeasonHere(__instance.currentLocation)) && __instance.isFertilized()))
                     {
                         __instance.fruitsOnTree.Value = Math.Min(3, __instance.fruitsOnTree.Value + 1);
                     }
                     ///chance to grow additional fruit based on foraging level
-                    if (rand.Next(1, 11) <= Game1.player.GetSkillLevel(Farmer.foragingSkill))
+                    if (ModEntry.Config.extraFruitLevel && rand.Next(1, 101) <= Game1.player.GetSkillLevel(Farmer.foragingSkill) * ModEntry.Config.fruitPerLevel)
                     {
                         __instance.fruitsOnTree.Value = Math.Min(3, __instance.fruitsOnTree.Value + 1);
                     }
@@ -83,26 +84,33 @@ namespace Orchard.Patches
 
             [HarmonyPostfix]
             /// adds chance to drop sapling after shaking tree
+            /// shaking gives foraging exp
             protected static void Postfix(FruitTree __instance, Vector2 tileLocation, int __state)
             {
-                Random rand = new Random();
 
-                int index = SaplingIndex.getSaplingIndex(__instance.indexOfFruit.Value);
-
-
-                if (__state > 0 && !__instance.hasDroppedSapling())
+                if (ModEntry.Config.expFromTrees)
                 {
-                    bool drop = false;
-                    for (int i = __state; i > 0; i--)
-                    {
-                        if (rand.Next(1, 101) + Game1.player.GetSkillLevel(Farmer.foragingSkill) > 100) drop = true;
-                    }
+                    Game1.player.gainExperience(Farmer.foragingSkill, __state * 3);
+                }
 
-                    if (drop == true)
+                if (ModEntry.Config.dropSappling)
+                {
+                    Random rand = new Random();
+
+                    if ((__state > 0 && !__instance.hasDroppedSapling()))
                     {
-                        __instance.addDroppedSapling();
-                        Debris sapling = new Debris(new Object(index, 1, false, -1, 0), tileLocation * 64f);
-                        __instance.currentLocation.debris.Add(sapling);
+                        bool drop = false;
+                        for (int i = __state; i > 0; i--)
+                        {
+                            if (rand.Next(1, 101) + Game1.player.GetSkillLevel(Farmer.foragingSkill) > 100) drop = true;
+                        }
+
+                        if (drop == true)
+                        {
+                            __instance.addDroppedSapling();
+                            Debris sapling = new Debris(new Object(__instance.getSapling(), 1, false, -1, 0), tileLocation * 64f);
+                            __instance.currentLocation.debris.Add(sapling);
+                        }
                     }
                 }
             }

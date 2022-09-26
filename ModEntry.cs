@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Reflection;
+using GenericModConfigMenu;
 using HarmonyLib;
 using Microsoft.Xna.Framework;
 using StardewModdingAPI;
@@ -15,6 +16,15 @@ namespace Orchard
     /// <summary>The mod entry point.</summary>
     public class ModEntry : Mod
     {
+        internal static ModConfig Config;
+
+        
+
+
+        
+        
+
+        
 
         /*********
         ** Public methods
@@ -27,11 +37,17 @@ namespace Orchard
 
             harmony.PatchAll(Assembly.GetExecutingAssembly());
 
+            Config = Helper.ReadConfig<ModConfig>();
+
             helper.Events.Input.ButtonPressed += this.OnButtonPressed;
 
             helper.Events.Content.AssetRequested += this.OnAssetRequested;
 
-    }
+            helper.Events.GameLoop.GameLaunched += this.OnGameLaunched;
+
+            
+
+        }
 
         /// <summary>
         /// changes description if tree fertilizer
@@ -52,6 +68,77 @@ namespace Orchard
                     data[805] = string.Join("/",fields);
                 });
             }
+        }
+
+
+        private void OnGameLaunched(object sender, GameLaunchedEventArgs e)
+        {
+            // get Generic Mod Config Menu's API (if it's installed)
+            var configMenu = this.Helper.ModRegistry.GetApi<IGenericModConfigMenuApi>("spacechase0.GenericModConfigMenu");
+            if (configMenu is null)
+                return;
+
+            // register mod
+            configMenu.Register(
+                mod: this.ModManifest,
+                reset: () =>Config = new ModConfig(),
+                save: () => Helper.WriteConfig(Config)
+            );
+
+            // add some config options
+            configMenu.AddBoolOption(
+                mod: this.ModManifest,
+                name: () => "Drop sapplings",
+                tooltip: () => "Allows Fruit Trees to drop one Sapling per Season",
+                getValue: () => Config.dropSappling,
+                setValue: value =>Config.dropSappling = value
+            );
+
+            configMenu.AddBoolOption(
+               mod: this.ModManifest,
+               name: () => "Fruits give Foraging Exp",
+               tooltip: () => "Shaking fruits of a tree will award Exp per fuit",
+               getValue: () => Config.expFromTrees,
+               setValue: value => Config.expFromTrees = value
+            );
+
+            configMenu.AddBoolOption(
+                mod: this.ModManifest,
+                name: () => "Out of season fruit trees",
+                tooltip: () => "Fruit trees will grow out of season if fertilized.",
+                getValue: () => Config.outOfSeasonTrees,
+                setValue: value => Config.outOfSeasonTrees = value
+            );
+
+            configMenu.AddBoolOption(
+                mod: this.ModManifest,
+                name: () => "Fertilizer affects fruits",
+                tooltip: () => "Fruit trees will grow more fruit if fertilized.",
+                getValue: () => Config.extraFruitFertilizer,
+                setValue: value => Config.extraFruitFertilizer = value
+            );
+
+            configMenu.AddBoolOption(
+                mod: this.ModManifest,
+                name: () => "Foraging affects fruits",
+                tooltip: () => "Fruit Trees will grow additional fruit based on your foraging level",
+                getValue: () => Config.extraFruitLevel,
+                setValue: value => Config.extraFruitLevel = value
+            );
+
+            configMenu.AddNumberOption(
+                mod: this.ModManifest,
+                getValue: () => Config.fruitPerLevel,
+                setValue: value => Config.fruitPerLevel = value,
+                name: () => "Chance for extra fruits",
+                tooltip: () => "Chance in percent to grow an extra Fruit per Foraging level",
+                min:  1,
+                max: 10,
+                interval: 1,
+                formatValue: null,
+                fieldId: null
+                );
+
         }
 
 #if DEBUG
