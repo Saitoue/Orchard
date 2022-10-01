@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
 	<EnableHarmony>true</EnableHarmony>
@@ -8,5 +8,7 @@
   <ItemGroup>
     <PackageReference Include="Pathoschild.Stardew.ModBuildConfig" Version="4.0.1" />
   </ItemGroup>
+
+  <Import Project="..\Common\Common.projitems" Label="Shared" />
 
 </Project>
