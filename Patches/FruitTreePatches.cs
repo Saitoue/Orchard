@@ -15,43 +15,43 @@ namespace Orchard.Patches
         /// <summary>
         /// modifies growth of Fruit Trees
         /// </summary>
-        [HarmonyPatch(typeof(FruitTree), nameof(FruitTree.dayUpdate))]
-        internal class FruitTreeGrow
-        {
+        //[harmonypatch(typeof(fruittree), nameof(fruittree.dayupdate))]
+        //internal class fruittreegrow
+        //{
 
-            [HarmonyPrefix]
-            protected static void Prefix(FruitTree __instance, GameLocation environment)
-            {
-                if (!FruitTree.IsGrowthBlocked(__instance.currentTileLocation, __instance.currentLocation) && __instance.isFertilized() && __instance.daysUntilMature.Value >= 0 && !Game1.IsWinter)
-                {
-                    __instance.daysUntilMature.Value--;
+        //    [harmonyprefix]
+        //    protected static void prefix(fruittree __instance, gamelocation environment)
+        //    {
+        //        if (!fruittree.isgrowthblocked(__instance.currenttilelocation, __instance.currentlocation) && __instance.isfertilized() && __instance.daysuntilmature.value >= 0 && !game1.iswinter)
+        //        {
+        //            __instance.daysuntilmature.value--;
                     
-                }
+        //        }
 
-                if (__instance.daysUntilMature.Value <= 0 && __instance.findCloseBeeHouse() && !Game1.IsWinter && !__instance.GreenHouseTree)
-                {
-                    __instance.daysUntilMature.Value--;
-                }
+        //        if (__instance.daysuntilmature.value <= 0 && __instance.findclosebeehouse() && !game1.iswinter && !__instance.greenhousetree)
+        //        {
+        //            __instance.daysuntilmature.value--;
+        //        }
 
-                if (!__instance.stump.Value && __instance.growthStage.Value == 4 && !Game1.IsWinter && (__instance.IsInSeasonHere(__instance.currentLocation) || __instance.isFertilized()))
-                {
-                    Random rand = new Random();
+        //        if (!__instance.stump.value && __instance.growthstage.value == 4 && !game1.iswinter && (__instance.isinseasonhere(__instance.currentlocation) || __instance.isfertilized()))
+        //        {
+        //            random rand = new random();
 
-                    ///grows additional fruit if fertilized
-                    if ((ModEntry.Config.extraFruitFertilizer || (ModEntry.Config.outOfSeasonTrees && !__instance.IsInSeasonHere(__instance.currentLocation)) && __instance.isFertilized()))
-                    {
-                        __instance.fruitsOnTree.Value = Math.Min(3, __instance.fruitsOnTree.Value + 1);
-                    }
-                    ///chance to grow additional fruit based on foraging level
-                    if (ModEntry.Config.extraFruitLevel && rand.Next(1, 101) <= Game1.player.GetSkillLevel(Farmer.foragingSkill) * ModEntry.Config.fruitPerLevel)
-                    {
-                        __instance.fruitsOnTree.Value = Math.Min(3, __instance.fruitsOnTree.Value + 1);
-                    }
-                }
-            }
+        //            ///grows additional fruit if fertilized
+        //            if ((modentry.config.extrafruitfertilizer || (modentry.config.outofseasontrees && !__instance.isinseasonhere(__instance.currentlocation)) && __instance.isfertilized()))
+        //            {
+        //                __instance.fruitsontree.value = math.min(3, __instance.fruitsontree.value + 1);
+        //            }
+        //            ///chance to grow additional fruit based on foraging level
+        //            if (modentry.config.extrafruitlevel && rand.next(1, 101) <= game1.player.getskilllevel(farmer.foragingskill) * modentry.config.fruitperlevel)
+        //            {
+        //                __instance.fruitsontree.value = math.min(3, __instance.fruitsontree.value + 1);
+        //            }
+        //        }
+        //    }
 
-        }
-
+        //}
+        
 
 
         /// <summary>

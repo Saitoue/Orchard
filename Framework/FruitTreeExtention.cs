@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using StardewValley;
 using StardewValley.TerrainFeatures;
+using StardewValley.Tools;
 
 
 namespace Orchard.Framework
@@ -154,6 +155,19 @@ namespace Orchard.Framework
             }
 
             return false;
+        }
+
+        public static int getAdditionalFruits(this FruitTree tree)
+        {
+            int fruits = 0;
+
+            if (ModEntry.Config.extraFruitFertilizer && tree.isFertilized()) fruits++;
+
+            Random rand = new Random();
+
+            if (ModEntry.Config.extraFruitLevel && rand.Next(1, 101) <= Game1.player.GetSkillLevel(Farmer.foragingSkill) * ModEntry.Config.fruitPerLevel) fruits++;
+            
+            return fruits;
         }
 
         public static int getSapling(this FruitTree tree)
